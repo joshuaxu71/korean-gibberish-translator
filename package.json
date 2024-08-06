@@ -10,6 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^14.15.3",
-    "dotenv": "^16.4.5"
-  }
+    "dotenv": "^16.4.5",
+    "hangul-js": "^0.2.6",
+    "module-alias": "^2.2.3"
+  },
+  "_moduleAliases": {
+    "@mappings": "src/mappings",
+    "@utils": "src/utils"
+  }  
 }
