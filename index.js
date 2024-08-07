@@ -3,7 +3,7 @@ require('module-alias/register');
 
 const { Client, GatewayIntentBits } = require('discord.js');
 
-const { translateEnglishToKorean } = require('@utils/translate.js');
+const { translateIfGibberish } = require('@utils/translate.js');
 
 const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
@@ -18,9 +18,9 @@ client.on('ready', () => {
 client.on('messageCreate', (message) => {
     if (message.author.bot) return; // Ignore bot messages
 
-    const assembled = translateEnglishToKorean(message.content);
+    const processedMessage = translateIfGibberish(message.content);
 
-    console.log(assembled)
+    console.log(processedMessage)
 });
 
 client.login(process.env.CLIENT_TOKEN);
