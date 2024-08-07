@@ -7,6 +7,16 @@ const englishToKoreanKeyMap = {
     'm': 'ㅡ', 'l': 'ㅣ'
 };
 
+const koreanToEnglishKeyMap = {
+    'ㄱ': 'r', 'ㄲ': 'R', 'ㄴ': 's', 'ㄷ': 'e', 'ㄸ': 'E', 'ㄹ': 'f',
+    'ㅁ': 'a', 'ㅂ': 'q', 'ㅃ': 'Q', 'ㅅ': 't', 'ㅆ': 'T', 'ㅇ': 'd',
+    'ㅈ': 'w', 'ㅉ': 'W', 'ㅊ': 'c', 'ㅋ': 'z', 'ㅌ': 'x', 'ㅍ': 'v', 'ㅎ': 'g',
+    'ㅏ': 'k', 'ㅐ': 'o', 'ㅑ': 'i', 'ㅒ': 'O', 'ㅓ': 'j', 'ㅔ': 'p',
+    'ㅕ': 'u', 'ㅖ': 'P', 'ㅗ': 'h', 'ㅛ': 'y', 'ㅜ': 'n', 'ㅠ': 'b',
+    'ㅡ': 'm', 'ㅣ': 'l'
+};
+
 module.exports = {
-    englishToKoreanKeyMap
+    englishToKoreanKeyMap,
+    koreanToEnglishKeyMap
 }
