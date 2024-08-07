@@ -1000,4 +1000,6 @@ const koreanCommonWords = new Set(["로",
     "대륙",
 ]);
 
-module.exports = koreanCommonWords;
+module.exports = {
+    koreanCommonWords
+}

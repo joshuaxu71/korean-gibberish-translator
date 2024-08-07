@@ -1000,4 +1000,6 @@ const englishCommonWords = new Set(["the",
     "neck",
 ]);
 
-module.exports = englishCommonWords;
+module.exports = {
+    englishCommonWords
+}
