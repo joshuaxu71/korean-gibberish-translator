@@ -15,6 +15,7 @@
     "module-alias": "^2.2.3"
   },
   "_moduleAliases": {
+    "@data": "src/data",
     "@mappings": "src/mappings",
     "@utils": "src/utils"
   }  
