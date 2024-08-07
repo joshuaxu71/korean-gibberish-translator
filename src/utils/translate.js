@@ -8,7 +8,9 @@ const { englishCommonWords } = require('@data/en_words.js');
 const { koreanCommonWords } = require('@data/kr_words.js');
 const tokenizer = new natural.WordTokenizer();
 
-function translateEnglishToKorean(input) {
+function translate(input, sourceLanguage) {
+    keyMap = sourceLanguage === "en" ? englishToKoreanKeyMap : koreanToEnglishKeyMap
+
     newLineOutputs = []
     newLineInputs = input.split('\n')
 
@@ -20,32 +22,9 @@ function translateEnglishToKorean(input) {
             const disassembled = Hangul.disassemble(input);
             const translated = []
             disassembled.forEach(element => {
-                translated.push(englishToKoreanKeyMap[element])
+                translated.push(keyMap[element])
             })
             spacedOutputs.push(Hangul.assemble(translated));
-        })
-
-        newLineOutputs.push(spacedOutputs.join(' '))
-    })
-	
-    return newLineOutputs.join('\n');
-}
-
-function translateKoreanToEnglish(input) {
-    newLineOutputs = []
-    newLineInputs = input.split('\n')
-
-    newLineInputs.forEach(input => {
-        spacedOutputs = []
-        spacedInputs = input.split(' ')
-    
-        spacedInputs.forEach(input => {
-            const disassembled = Hangul.disassemble(input);
-            const translated = []
-            disassembled.forEach(element => {
-                translated.push(koreanToEnglishKeyMap[element])
-            })
-            spacedOutputs.push(translated.join(''));
         })
 
         newLineOutputs.push(spacedOutputs.join(' '))
@@ -85,7 +64,7 @@ function isGibberishKr(sentence) {
 
 function translateIfGibberish(sentence) {
     if (isGibberish(sentence, "en")) {
-        return translateEnglishToKorean(sentence)
+        return translate(sentence, "en")
     }
 }
 
