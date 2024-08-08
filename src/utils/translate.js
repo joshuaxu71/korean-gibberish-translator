@@ -2,13 +2,15 @@ require('module-alias/register');
 
 const Hangul = require('hangul-js');
 const natural = require('natural');
+const { PythonShell } = require('python-shell');
 
 const { englishToKoreanKeyMap, koreanToEnglishKeyMap } = require('@mappings/en_kr_map.js');
 const { englishCommonWords } = require('@data/en_words.js');
 const { koreanCommonWords } = require('@data/kr_words.js');
+
 const tokenizer = new natural.WordTokenizer();
 
-function translate(input, sourceLanguage) {
+async function translate(input, sourceLanguage) {
     keyMap = sourceLanguage === "en" ? englishToKoreanKeyMap : koreanToEnglishKeyMap
 
     newLineOutputs = []
@@ -45,9 +47,9 @@ function isGibberish(sentence, language) {
 }
 
 function isGibberishEn(sentence) {
-    const threshold = 0.8;
     const words = tokenizer.tokenize(sentence);
 
+    const threshold = 0.8;
     let gibberishCount = 0;
     words.forEach(word => {
         if (!englishCommonWords.has(word)) {
@@ -58,14 +60,59 @@ function isGibberishEn(sentence) {
     return gibberishCount / words.length > threshold;
 }
 
-function isGibberishKr(sentence) {
-    
+function tokenizeKoreanText(text) {
+    let options = {
+        mode: 'text',
+        pythonOptions: ['-u'],
+        scriptPath: 'python',
+        args: text
+    };
+
+    return new Promise((resolve, reject) => {
+        PythonShell.run('tokenize.py', options).then(result => {
+            try {
+                const parsedResult = JSON.parse(result[0]);
+                resolve(parsedResult);
+            } catch (e) {
+                console.error('Error parsing result:', e);
+                reject(e);
+            }
+        });
+    });
 }
 
-function translateIfGibberish(sentence) {
+async function isGibberishKr(sentence) {
+    try {
+        const words = await tokenizeKoreanText(sentence);
+        
+        const threshold = 0.8;
+        let gibberishCount = 0;
+        const totalWords = words.length;
+
+        words.forEach(word => {
+            if (!koreanCommonWords.has(word)) {
+                gibberishCount++;
+            }
+        });
+
+        const gibberishRatio = gibberishCount / totalWords;
+        return gibberishRatio > threshold;
+    } catch (err) {
+        console.error('Error in isGibberishKr:', err);
+        return false;
+    }
+}
+
+async function translateIfGibberish(sentence) {
     if (isGibberish(sentence, "en")) {
         return translate(sentence, "en")
     }
+
+    if (await isGibberishKr(sentence)) {
+        return translate(sentence, "kr");
+    }
+    
+    return sentence;
 }
 
 module.exports = {

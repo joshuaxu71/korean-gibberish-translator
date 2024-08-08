@@ -12,12 +12,14 @@
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "hangul-js": "^0.2.6",
+    "korean-gibberish-translator": "file:",
     "module-alias": "^2.2.3",
-    "natural": "^7.1.0"
+    "natural": "^7.1.0",
+    "python-shell": "^5.0.0"
   },
   "_moduleAliases": {
     "@data": "src/data",
     "@mappings": "src/mappings",
     "@utils": "src/utils"
-  }  
+  }
 }

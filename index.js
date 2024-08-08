@@ -15,12 +15,15 @@ client.on('ready', () => {
     console.log('Ready');
 });
 
-client.on('messageCreate', (message) => {
+client.on('messageCreate', async (message) => {
     if (message.author.bot) return; // Ignore bot messages
 
-    const processedMessage = translateIfGibberish(message.content);
-
-    console.log(processedMessage)
-});
+    try {
+        const processedMessage = await translateIfGibberish(message.content);
+        console.log(processedMessage);
+    } catch (error) {
+        console.error('Error processing message:', error);
+    }
+})
 
 client.login(process.env.CLIENT_TOKEN);
