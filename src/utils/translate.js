@@ -25,7 +25,8 @@ async function translate(input, sourceLanguage) {
             const disassembled = Hangul.disassemble(input);
             const translated = []
             disassembled.forEach(element => {
-                translated.push(keyMap[element])
+                translatedElement = keyMap.get(element) || element
+                translated.push(translatedElement)
             })
             spacedOutputs.push(Hangul.assemble(translated));
         })
@@ -128,7 +129,7 @@ async function translateIfGibberish(sentence) {
 
             switch (language) {
                 case Language.ENGLISH:
-                    translationIsAlsoGibberish = isGibberishKr(translation)
+                    translationIsAlsoGibberish = await isGibberishKr(translation)
                     break;
                 case Language.KOREAN:
                     translationIsAlsoGibberish = isGibberishEn(translation)
