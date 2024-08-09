@@ -122,7 +122,29 @@ async function translateIfGibberish(sentence) {
     }
     
     if (isGibberish) {
-        return translate(sentence, language)
+        try {
+            const translation = await translate(sentence, language);
+            var translationIsAlsoGibberish = false;
+
+            switch (language) {
+                case Language.ENGLISH:
+                    translationIsAlsoGibberish = isGibberishKr(translation)
+                    break;
+                case Language.KOREAN:
+                    translationIsAlsoGibberish = isGibberishEn(translation)
+                    break;
+            }
+
+            /*
+             * If translation is also gibberish, it's probably a typo / unregistered word, 
+             * so we won't return the gibberish translation
+             */
+            if (!translationIsAlsoGibberish) {
+                return translation
+            }
+        } catch (error) {
+            console.error('Error processing message:', error);
+        }
     }
 }
 
