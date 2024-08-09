@@ -7,11 +7,12 @@ const { PythonShell } = require('python-shell');
 const { englishToKoreanKeyMap, koreanToEnglishKeyMap } = require('@mappings/en_kr_map.js');
 const { englishCommonWords } = require('@data/en_words.js');
 const { koreanCommonWords } = require('@data/kr_words.js');
+const { Language } = require('@enums/language.js');
 
 const tokenizer = new natural.WordTokenizer();
 
 async function translate(input, sourceLanguage) {
-    keyMap = sourceLanguage === "en" ? englishToKoreanKeyMap : koreanToEnglishKeyMap
+    keyMap = sourceLanguage === Language.ENGLISH ? englishToKoreanKeyMap : koreanToEnglishKeyMap
 
     newLineOutputs = []
     newLineInputs = input.split('\n')
@@ -33,17 +34,6 @@ async function translate(input, sourceLanguage) {
     })
 	
     return newLineOutputs.join('\n');
-}
-
-function isGibberish(sentence, language) {
-    switch(language) {
-        case "en":
-            return isGibberishEn(sentence)
-        case "kr":
-            return isGibberishKr(sentence)
-        default:
-            return false
-    }
 }
 
 function isGibberishEn(sentence) {
@@ -103,15 +93,37 @@ async function isGibberishKr(sentence) {
     }
 }
 
-async function translateIfGibberish(sentence) {
-    if (isGibberish(sentence, "en")) {
-        return translate(sentence, "en")
-    }
+function detectLanguage(text) {
+    const koreanRegex = /[가-힣]/; // Matches any Korean character
+    const englishRegex = /[a-zA-Z]/; // Matches any English character
 
-    if (await isGibberishKr(sentence)) {
-        return translate(sentence, "kr");
+    if (koreanRegex.test(text) && englishRegex.test(text)) {
+        return Language.UNSUPPORTED;
+    } else if (koreanRegex.test(text)) {
+        return Language.KOREAN;
+    } else if (englishRegex.test(text)) {
+        return Language.ENGLISH;
+    } else {
+        return Language.UNSUPPORTED; // If neither English nor Korean characters are found
+    }
+}
+
+async function translateIfGibberish(sentence) {
+    const language = detectLanguage(sentence)
+
+    var isGibberish = false;
+    switch (language) {
+        case Language.ENGLISH:
+            isGibberish = isGibberishEn(sentence)
+            break;
+        case Language.KOREAN:
+            isGibberish = await isGibberishKr(sentence)
+            break;
     }
     
+    if (isGibberish) {
+        return translate(sentence, language)
+    }
     return sentence;
 }
 

@@ -19,6 +19,7 @@
   },
   "_moduleAliases": {
     "@data": "src/data",
+    "@enums": "src/enums",
     "@mappings": "src/mappings",
     "@utils": "src/utils"
   }
