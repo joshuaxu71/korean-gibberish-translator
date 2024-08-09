@@ -39,7 +39,7 @@ async function translate(input, sourceLanguage) {
 function isGibberishEn(sentence) {
     const words = tokenizer.tokenize(sentence);
 
-    const threshold = 0.8;
+    const threshold = 0.7;
     let gibberishCount = 0;
     words.forEach(word => {
         if (!englishCommonWords.has(word)) {
@@ -75,7 +75,7 @@ async function isGibberishKr(sentence) {
     try {
         const words = await tokenizeKoreanText(sentence);
                 
-        const threshold = 0.8;
+        const threshold = 0.7;
         let gibberishCount = 0;
         const totalWords = words.length;
 
