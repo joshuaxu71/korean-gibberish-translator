@@ -74,7 +74,7 @@ function tokenizeKoreanText(text) {
 async function isGibberishKr(sentence) {
     try {
         const words = await tokenizeKoreanText(sentence);
-        
+                
         const threshold = 0.8;
         let gibberishCount = 0;
         const totalWords = words.length;
@@ -124,7 +124,6 @@ async function translateIfGibberish(sentence) {
     if (isGibberish) {
         return translate(sentence, language)
     }
-    return sentence;
 }
 
 module.exports = {

@@ -20,7 +20,9 @@ client.on('messageCreate', async (message) => {
 
     try {
         const processedMessage = await translateIfGibberish(message.content);
-        console.log(processedMessage);
+        if (processedMessage !== undefined) {
+            message.reply(processedMessage);
+        }
     } catch (error) {
         console.error('Error processing message:', error);
     }
